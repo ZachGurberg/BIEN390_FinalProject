@@ -4,16 +4,18 @@ import numpy as np
 box_threshold = 0
 boxes = []
 
-
+#creating camera object
 camera=cv2.VideoCapture(0)
 
-
+#frame size
 camera.set(cv2.CAP_PROP_FRAME_WIDTH, 160)
 camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 120)
 
+#threshold for HSV color space (targetted to red)
 lower_bound = np.array([0,100,100])
 upper_bound = np.array([30,255,255])
 
+#obtaining video
 while True:
     ret,frame = camera.read()
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
