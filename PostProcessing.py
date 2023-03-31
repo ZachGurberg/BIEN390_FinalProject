@@ -27,8 +27,9 @@ while cap.isOpened():
             if (w > box_threshold and h > box_threshold):
                 cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
                 boxes.append((h,w))
-        cv2.imshow('Processed Frame', mask)
-        if cv2.waitKey(25) & 0xFF == ord('q'):
+        cv2.imshow('Processed Frame', frame)
+        key = cv2.waitKey(0)
+        if key == ord('q'):
             break
     else:
         break
