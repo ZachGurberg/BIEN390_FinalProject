@@ -8,11 +8,11 @@ from datetime import datetime
 
 
 class HistogramWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, filename):
         super().__init__()
         self.setWindowTitle('Histogram')
         self.setGeometry(100,100,800,600)
-        self.data = GetData(False) ##TODO: might have to rearrange import here
+        self.data = GetData(filename, True) ##TODO: might have to rearrange import here
         self.create_histogram()
     
     def create_histogram(self):

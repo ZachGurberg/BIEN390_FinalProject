@@ -1,13 +1,13 @@
 import cv2
 import numpy as np
-from VideoCapture import VideoRecorder
+from Legacy.VideoCapture import VideoRecorder
 
 
-def GetData(showVideo):
+def GetData(filename, showVideo):
     # filename = captureVideo()
     # cap = cv2.VideoCapture(filename) ##should set to this, for testing we will use the sample
 
-    cap = cv2.VideoCapture("test.avi")
+    cap = cv2.VideoCapture(filename)
 
     #box parameters
     box_threshold = 5
@@ -34,6 +34,7 @@ def GetData(showVideo):
                 if cv2.waitKey(25) & 0xFF == ord('q'):
                     break
         else:
+            cv2.destroyAllWindows()
             break
 
     #convert to volumes

@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import QAction, QMenu, QApplication, QMainWindow, QMenuBar,
 from HistogramWindow import HistogramWindow
 from PostProcessing import GetData
 from Calibration import Calibration
-from VideoCapture import VideoRecorder
+from VideoCapture2 import VideoRecorder
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -48,12 +48,34 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(central_widget)
 
     def trigger_measurement(self):
+         # create video recorder widget
         self.video_recorder = VideoRecorder()
-        self.video_recorder.show()
-        ##TODO
-        # Record Video
-        # Perform Post Processing
-        # Display data in histogram
+        self.video_recorder.setFixedSize(660,530)
+
+        # create buttons
+        start_recording_button = QPushButton('Start Recording')
+        stop_recording_button = QPushButton('Stop Recording')
+
+        # add buttons to layout
+        layout = QVBoxLayout()
+        layout.addWidget(self.video_recorder)
+        layout.addWidget(start_recording_button)
+        layout.addWidget(stop_recording_button)
+
+        # create widget for layout
+        widget = QWidget()
+        widget.setLayout(layout)
+
+        # add layout widget to main window
+        self.setCentralWidget(widget)
+
+        # connect button signals to video recorder functions
+        start_recording_button.clicked.connect(self.video_recorder.start_recording)
+        stop_recording_button.clicked.connect(self.video_recorder.stop_recording)
+
+        #The stop recording function calls the creation of a histogram. the data passed to the histogram is based
+        # on the filename of the recorded video. The video passes through the postProcessing steps before the histogram
+        # is created and displayed to the user. The test.avi filename is the filename used for now, but it can be changed quickly
 
     def trigger_calibration(self):
         #Temporary placeholder to test function of histogram. The function should operate in a similar manner to the 
@@ -63,6 +85,11 @@ class MainWindow(QMainWindow):
         self.histogram = HistogramWindow()
         self.histogram.show()
 
+    def trigger_histogram(self, filename):
+        #TODO remove this for function
+        filename = "test.avi"
+        self.histogram = HistogramWindow(filename)
+        self.histogram.show()
 
     
 if __name__ == '__main__':
