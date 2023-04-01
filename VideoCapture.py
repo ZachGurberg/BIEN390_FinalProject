@@ -3,15 +3,11 @@ import numpy as np
 import random
 
 def captureVideo():
-    filename = "Sample#" + str(random.randint(1,10000))+".avi"
-
-    #parameters for the output bounding boxes we aim to capture
-    box_threshold = 0
-    boxes = [] 
+    filename = "Sample#" + str(random.randint(1,10000))+".avi" 
 
     #camera parameters
     camera = cv2.VideoCapture(0)
-    size = (640,480)
+    size = (640,480) #TODO might need to make larger and adjust dependencies in postProcessing/calibration
 
     #capturing and saving video
     #edge
