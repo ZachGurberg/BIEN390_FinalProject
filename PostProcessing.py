@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from VideoCapture import captureVideo
+from VideoCapture import VideoRecorder
 
 
 def GetData(showVideo):

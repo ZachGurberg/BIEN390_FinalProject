@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import QVBoxLayout, QWidget
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from datetime import datetime
 
 
 class HistogramWindow(QMainWindow):
@@ -16,10 +17,21 @@ class HistogramWindow(QMainWindow):
     
     def create_histogram(self):
 
+        # Get current date and time
+        now = datetime.now()
+        dt_string = now.strftime("%Y-%m-%d %H:%M:%S")
+
         #Create a MatPlotLib Plot
         fig = plt.figure()
         ax=fig.add_subplot(111)
         ax.hist(self.data, bins=4)
+        ax.set_title(dt_string)
+        ax.set_xlabel('Volume')
+        ax.set_ylabel('Frequency')
+
+        xmin = np.floor(self.data.min() / 100) * 100
+        xmax = np.ceil(self.data.max() / 100) * 100
+        ax.set_xlim(xmin, xmax)
 
         #Adding it to a QWidget as Layout
         canvas = FigureCanvas(fig)
@@ -28,4 +40,5 @@ class HistogramWindow(QMainWindow):
         widget = QWidget()
         widget.setLayout(layout)
 
+        self.resize(1000,800)
         self.setCentralWidget(widget)

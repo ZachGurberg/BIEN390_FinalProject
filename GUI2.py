@@ -7,6 +7,7 @@ from PyQt5.QtWidgets import QAction, QMenu, QApplication, QMainWindow, QMenuBar,
 from HistogramWindow import HistogramWindow
 from PostProcessing import GetData
 from Calibration import Calibration
+from VideoCapture import VideoRecorder
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -47,10 +48,18 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(central_widget)
 
     def trigger_measurement(self):
-        self.histogram = HistogramWindow()
-        self.histogram.show()
+        self.video_recorder = VideoRecorder()
+        self.video_recorder.show()
+        ##TODO
+        # Record Video
+        # Perform Post Processing
+        # Display data in histogram
 
     def trigger_calibration(self):
+        #Temporary placeholder to test function of histogram. The function should operate in a similar manner to the 
+        #video recorder. But the bounding boxes should be computed live. Once the bounding box with the correct ratio
+        #is found, the video should stop and the conversion from pixels to mm should be stored as a self.conversion field
+        # the user should then receive a message saying calibration confirmed and we can proceed to the measure button.
         self.histogram = HistogramWindow()
         self.histogram.show()
 
