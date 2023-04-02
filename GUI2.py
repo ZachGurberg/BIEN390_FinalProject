@@ -9,10 +9,14 @@ from PostProcessing import GetData
 from Calibration import Calibration
 from VideoCapture2 import VideoRecorder
 
+KNOWN_HEIGHT = 0.5
+KNOWN_WIDTH = 5.5
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle('Welcome!')
+        self.conversion = None
 
         #creating menu bar and two menu items
         menu_bar = self.menuBar()
@@ -49,29 +53,32 @@ class MainWindow(QMainWindow):
 
     def trigger_measurement(self):
          # create video recorder widget
-        self.video_recorder = VideoRecorder()
-        self.video_recorder.setFixedSize(660,530)
+        if self.conversion != None:
+            self.video_recorder = VideoRecorder()
+            self.video_recorder.setFixedSize(660,530)
 
-        # create buttons
-        start_recording_button = QPushButton('Start Recording')
-        stop_recording_button = QPushButton('Stop Recording')
+            # create buttons
+            start_recording_button = QPushButton('Start Recording')
+            stop_recording_button = QPushButton('Stop Recording')
 
-        # add buttons to layout
-        layout = QVBoxLayout()
-        layout.addWidget(self.video_recorder)
-        layout.addWidget(start_recording_button)
-        layout.addWidget(stop_recording_button)
+            # add buttons to layout
+            layout = QVBoxLayout()
+            layout.addWidget(self.video_recorder)
+            layout.addWidget(start_recording_button)
+            layout.addWidget(stop_recording_button)
 
-        # create widget for layout
-        widget = QWidget()
-        widget.setLayout(layout)
+            # create widget for layout
+            widget = QWidget()
+            widget.setLayout(layout)
 
-        # add layout widget to main window
-        self.setCentralWidget(widget)
+            # add layout widget to main window
+            self.setCentralWidget(widget)
 
-        # connect button signals to video recorder functions
-        start_recording_button.clicked.connect(self.video_recorder.start_recording)
-        stop_recording_button.clicked.connect(self.video_recorder.stop_recording)
+            # connect button signals to video recorder functions
+            start_recording_button.clicked.connect(self.video_recorder.start_recording)
+            stop_recording_button.clicked.connect(self.video_recorder.stop_recording)
+        else:
+            showMessage('Must Calibrate First!', 1000)
 
         #The stop recording function calls the creation of a histogram. the data passed to the histogram is based
         # on the filename of the recorded video. The video passes through the postProcessing steps before the histogram
@@ -82,14 +89,25 @@ class MainWindow(QMainWindow):
         #video recorder. But the bounding boxes should be computed live. Once the bounding box with the correct ratio
         #is found, the video should stop and the conversion from pixels to mm should be stored as a self.conversion field
         # the user should then receive a message saying calibration confirmed and we can proceed to the measure button.
-        self.histogram = HistogramWindow()
-        self.histogram.show()
+        self.conversion = Calibration(KNOWN_HEIGHT,KNOWN_WIDTH)
 
     def trigger_histogram(self, filename):
         #TODO remove this for function
         filename = "test.avi"
-        self.histogram = HistogramWindow(filename)
+        self.histogram = HistogramWindow(filename, self.conversion)
         self.histogram.show()
+        ## Putting a little note here, I'm not sure if self.histogram.show() is working
+            
+def showMessage(message, time):
+    # create an image to display the message on
+    img = np.zeros((512, 512, 3), np.uint8)
+    # add the text to the image
+    cv2.putText(img, message, (100, 256), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+    # display the image for time
+    cv2.imshow('Message', img)
+    cv2.waitKey(time)
+    # close the window
+    cv2.destroyAllWindows()
 
     
 if __name__ == '__main__':
