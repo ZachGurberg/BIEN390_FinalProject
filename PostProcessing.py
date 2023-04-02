@@ -78,12 +78,6 @@ def GetData(filename, showVideo):
     volumes = (4*np.pi/3)*tuples_array[:,0]*tuples_array[:,1]*tuples_array[:,1] #Assume depth axis is minor axis 4π/3abc, b=c
     return volumes
 
-
-
-    # tuples_array = np.array(boxes)
-    # volumes = tuples_array[:,0]*tuples_array[:,1]
-    # return volumes
-
 def showMessage(message, time):
     # create an image to display the message on
     img = np.zeros((512, 512, 3), np.uint8)
