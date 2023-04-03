@@ -14,14 +14,18 @@ def GetData(filename, showVideo):
     boxes = [] 
 
     #thresholding out white
-    lower_bound = np.array([0,30,30])
-    upper_bound = np.array([255,255,255])
+    lower_bound = np.array([60, 100, 100])
+    upper_bound = np.array([170, 255, 255])
 
     while cap.isOpened():
         ret, frame = cap.read()
         if ret:
             hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
             mask = cv2.inRange(hsv, lower_bound, upper_bound)
+            kernel = np.ones((5,5),np.uint8)
+            mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
+            mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
+
             edges = cv2.Canny(mask, 0, 1000)
             contours, hierarchy = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
             for cnt in contours:
@@ -54,7 +58,8 @@ def GetData(filename, showVideo):
                 #     boxes.append((width, height))
                 #     pause = True
             if (showVideo):
-                cv2.imshow('Processed Frame', frame)
+                cv2.imshow('Processed Frame', mask)
+                cv2.imshow('Native', frame)
                 while pause:
                     key = cv2.waitKey(0)
                     if (key == ord('y')):
@@ -64,6 +69,8 @@ def GetData(filename, showVideo):
                     elif (key == ord('n')):
                         showMessage('Frame Discarded', 1000)
                         pause = False
+                    elif (key == ord('q')):
+                        break
                     else:
                         showMessage('Invalid Input', 1000)
                 if cv2.waitKey(25) & 0xFF == ord('q'):
@@ -75,6 +82,7 @@ def GetData(filename, showVideo):
     #convert to volumes
     tuples_array = np.array(boxes)
     volumes = (4*np.pi/3)*tuples_array[:,0]*tuples_array[:,1]*tuples_array[:,1] #Assume depth axis is minor axis 4π/3abc, b=c
+    print(volumes)
     return volumes
 
 def showMessage(message, time):
@@ -90,5 +98,5 @@ def showMessage(message, time):
 
 
 if __name__ == "__main__":
-    volumes = GetData("test.mov", True)
+    volumes = GetData("video_2023-04-03_11-30-59.MOV", True)
     print(volumes)

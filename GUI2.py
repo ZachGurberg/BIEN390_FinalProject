@@ -7,8 +7,8 @@ from PostProcessing import GetData
 from Calibration import Calibration
 from VideoCapture2 import VideoRecorder
 
-KNOWN_HEIGHT = 15 #cm
-KNOWN_WIDTH = 5 #cm
+KNOWN_HEIGHT = 2.5 #cm
+KNOWN_WIDTH = 1 #cm
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -57,7 +57,7 @@ class MainWindow(QMainWindow):
 
         if self.conversion != None or require_calibration == False:
             self.video_recorder = VideoRecorder()
-            self.video_recorder.setFixedSize(660,530)
+            self.video_recorder.setFixedSize(700,680)
 
             # create buttons
             start_recording_button = QPushButton('Start Recording')
@@ -99,12 +99,12 @@ class MainWindow(QMainWindow):
 
     def trigger_histogram(self, filename):
         #TODO remove this for function
-        filename = "test.MOV"
-
-        print("test")
+        # filename = "test.MOV"
 
         self.histogram = HistogramWindow(filename, self.conversion)
         self.histogram.show()
+
+        
         ## Putting a little note here, I'm not sure if self.histogram.show() is working
             
 def showMessage(message, time):

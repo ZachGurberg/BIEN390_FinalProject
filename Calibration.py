@@ -3,7 +3,7 @@ import numpy as np
 
 
 def Calibration(known_h, known_w):
-    lower_threshold = (0, 30, 30)
+    lower_threshold = (79, 30, 30)
     upper_threshold = (255, 255, 255)
     
     # define the known height to width ratio of the object
@@ -79,6 +79,8 @@ def Calibration(known_h, known_w):
                 width_mean.clear()
         # display the frame
         cv2.imshow('Calibration', frame)
+        cv2.imshow('HSV', hsv_frame)
+        cv2.imshow('Mask', mask)
         # exit the loop if the 'q' key is pressed
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break

@@ -15,6 +15,7 @@ class HistogramWindow(QMainWindow):
         self.setWindowTitle('Histogram')
         self.setGeometry(100,100,800,600)
         self.data = GetData(filename, True) * (conversion_factor**3) ##TODO: might have to rearrange import here
+        print(self.data)
         self.create_histogram()
     
     def create_histogram(self):
@@ -28,12 +29,12 @@ class HistogramWindow(QMainWindow):
         ax=fig.add_subplot(111)
         ax.hist(self.data, bins=4)
         ax.set_title(dt_string)
-        ax.set_xlabel('Volume')
+        ax.set_xlabel('Volume (ml)')
         ax.set_ylabel('Frequency')
 
-        xmin = np.floor(self.data.min() / 100) * 100
-        xmax = np.ceil(self.data.max() / 100) * 100
-        ax.set_xlim(xmin, xmax)
+        # xmin = np.floor(self.data.min() / 100) * 100
+        # xmax = np.ceil(self.data.max() / 100) * 100
+        ax.set_xlim(0, 1)
 
         #Adding it to a QWidget as Layout
         canvas = FigureCanvas(fig)
