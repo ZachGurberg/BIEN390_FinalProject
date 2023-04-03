@@ -12,7 +12,7 @@ class VideoRecorder(QWidget):
 
         # initialize video capture
         self.cap = cv2.VideoCapture(0)
-        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640) ##TODO
         self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
         self.fps = int(self.cap.get(cv2.CAP_PROP_FPS))
         self.width = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))

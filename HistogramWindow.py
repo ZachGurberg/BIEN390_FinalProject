@@ -12,7 +12,7 @@ class HistogramWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle('Histogram')
         self.setGeometry(100,100,800,600)
-        self.data = GetData(filename, True) * conversion_factor ##TODO: might have to rearrange import here
+        self.data = GetData(filename, True) * (conversion_factor**3) ##TODO: might have to rearrange import here
         self.create_histogram()
     
     def create_histogram(self):

@@ -1,11 +1,10 @@
 import cv2
 import numpy as np
-from Legacy.VideoCapture import VideoRecorder
 
 
 def Calibration(known_h, known_w):
-    light_blue_lower = (35, 50, 50)
-    light_blue_upper = (70, 255, 255)
+    lower_threshold = (0, 30, 30)
+    upper_threshold = (255, 255, 255)
     
     # define the known height to width ratio of the object
     known_ratio = known_h/known_w
@@ -14,6 +13,9 @@ def Calibration(known_h, known_w):
 
     # initialize the camera
     cap = cv2.VideoCapture(0)
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640) ##TODO
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+    
     
     width_mean = []
     height_mean = []
@@ -26,7 +28,7 @@ def Calibration(known_h, known_w):
         hsv_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
         # create a mask for the object color
-        mask = cv2.inRange(hsv_frame, light_blue_lower, light_blue_upper)
+        mask = cv2.inRange(hsv_frame, lower_threshold, upper_threshold)
 
         # apply a median blur to reduce noise
         mask = cv2.medianBlur(mask, 5)
@@ -52,10 +54,24 @@ def Calibration(known_h, known_w):
             cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
             current_ratio = h / w
 #             print(len(height_mean), len(width_mean))
-            if abs(current_ratio - known_ratio) < 0.1:
+            if abs(current_ratio - known_ratio) < 0.2: #Precision of the ratio
+                #Following two if statements should eliminate boxes with the right ratio but not the right size
+                if (len(height_mean)>0):
+                    for height in height_mean:
+                        if abs(h-height) > 10:
+                            height_mean.clear()
+                            width_mean.clear()
+
+                if (len(width_mean)>0):
+                    for width in width_mean:
+                        if abs(w-width) > 10:
+                            height_mean.clear()
+                            width_mean.clear()
+
                 height_mean.append(h)
                 width_mean.append(w)
-                if len(height_mean) >= 30:
+
+                if len(height_mean) >= 10: #Number of frames required to calculate the pixel to cm factor
                     pixel_to_cm_factor = np.average(((known_w / np.array(width_mean)) + (known_h / np.array(height_mean))))/2 
                     break
             else:
@@ -83,6 +99,7 @@ def showMessage(message, time):
     cv2.waitKey(time)
     # close the window
     cv2.destroyAllWindows()
+
 if __name__ == "__main__":
-    test = Calibration(0.5, 5.5)
+    test = Calibration(7.5, 2.5)
     print(test)

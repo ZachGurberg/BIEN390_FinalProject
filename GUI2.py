@@ -9,8 +9,8 @@ from PostProcessing import GetData
 from Calibration import Calibration
 from VideoCapture2 import VideoRecorder
 
-KNOWN_HEIGHT = 0.5
-KNOWN_WIDTH = 5.5
+KNOWN_HEIGHT = 15 #cm
+KNOWN_WIDTH = 5 #cm
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -53,7 +53,11 @@ class MainWindow(QMainWindow):
 
     def trigger_measurement(self):
          # create video recorder widget
-        if self.conversion != None:
+
+        #flag to require calibration before measurement
+        require_calibration = True
+
+        if self.conversion != None or require_calibration == False:
             self.video_recorder = VideoRecorder()
             self.video_recorder.setFixedSize(660,530)
 
