@@ -1,8 +1,6 @@
 import sys
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from PyQt5.QtWidgets import QAction, QMenu, QApplication, QMainWindow, QMenuBar, QAction, QPushButton, QVBoxLayout, QWidget
 from HistogramWindow import HistogramWindow
 from PostProcessing import GetData
@@ -55,7 +53,7 @@ class MainWindow(QMainWindow):
          # create video recorder widget
 
         #flag to require calibration before measurement
-        require_calibration = True
+        require_calibration = False
 
         if self.conversion != None or require_calibration == False:
             self.video_recorder = VideoRecorder()
@@ -84,6 +82,10 @@ class MainWindow(QMainWindow):
         else:
             showMessage('Must Calibrate First!', 1000)
 
+        # self.trigger_histogram(self.video_recorder.filename)
+
+        
+
         #The stop recording function calls the creation of a histogram. the data passed to the histogram is based
         # on the filename of the recorded video. The video passes through the postProcessing steps before the histogram
         # is created and displayed to the user. The test.avi filename is the filename used for now, but it can be changed quickly
@@ -97,7 +99,10 @@ class MainWindow(QMainWindow):
 
     def trigger_histogram(self, filename):
         #TODO remove this for function
-        filename = "test.avi"
+        filename = "test.MOV"
+
+        print("test")
+
         self.histogram = HistogramWindow(filename, self.conversion)
         self.histogram.show()
         ## Putting a little note here, I'm not sure if self.histogram.show() is working

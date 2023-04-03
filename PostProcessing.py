@@ -1,6 +1,5 @@
 import cv2
 import numpy as np
-from Legacy.VideoCapture import VideoRecorder
 
 
 def GetData(filename, showVideo):
@@ -11,7 +10,7 @@ def GetData(filename, showVideo):
     cap = cv2.VideoCapture(filename)
 
     #box parameters
-    box_threshold = 0
+    box_threshold = 1
     boxes = [] 
 
     #thresholding out white
@@ -91,5 +90,5 @@ def showMessage(message, time):
 
 
 if __name__ == "__main__":
-    volumes = GetData("test.avi", True)
+    volumes = GetData("test.mov", True)
     print(volumes)

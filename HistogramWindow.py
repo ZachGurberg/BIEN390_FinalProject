@@ -2,6 +2,8 @@ from PyQt5.QtWidgets import QMainWindow
 from PostProcessing import GetData
 from PyQt5.QtWidgets import QVBoxLayout, QWidget
 import numpy as np
+import matplotlib
+matplotlib.use('Qt5Agg')
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from datetime import datetime
