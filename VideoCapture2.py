@@ -56,6 +56,8 @@ class VideoRecorder(QWidget):
         QMessageBox.information(self, 'Video Saved', f"Video saved as {self.filename}.")
         self.cap.release()
         self.parent().close()
-        self.parent().parent().close()
         self.parent().parent().trigger_histogram(self.filename)
+        self.parent().parent().close()
         self.close()
+
+        
