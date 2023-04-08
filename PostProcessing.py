@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 MAX_DISTANCE = 190
-box_threshold = 5000 #If want to use the optimize contours, set this to 3000 and unhastag lines 87-128
+box_threshold = 1000 #If want to use the optimize contours, set this to 3000 and unhastag lines 87-128
 
 def GetData(filename, showVideo):
     pause = False
@@ -19,14 +19,18 @@ def GetData(filename, showVideo):
 #     upper_bound = np.array([170, 255, 255])
 
 #     lower_bound = np.array([60, 59, 100])
-    lower_bound = np.array([55,59,90])
-    upper_bound = np.array([255,255,255])
+#     lower_bound = np.array([55,59,90])
+#     upper_bound = np.array([255,255,255]) # these are for last video
+
+    lower_bound = np.array([100, 0, 137])
+    upper_bound = np.array([118, 255, 255])
 
     while cap.isOpened():
         ret, frame = cap.read()
         if ret:
-            hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-            mask = cv2.inRange(hsv, lower_bound, upper_bound)
+#             hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+            lab = cv2.cvtColor(frame, cv2.COLOR_BGR2LAB)
+            mask = cv2.inRange(lab, lower_bound, upper_bound)
             kernel = np.ones((5,5),np.uint8)
             mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
             mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
@@ -64,6 +68,7 @@ def GetData(filename, showVideo):
                 #     pause = True
             if (showVideo):
                 cv2.imshow('Processed Frame', cv2.resize(mask, (600,480)))
+                cv2.imshow('LAB transform', cv2.resize(lab, (600, 480)))
                 cv2.imshow('Native', cv2.resize(frame, (600,480)))
                 while pause:
                     key = cv2.waitKey(0)
@@ -202,5 +207,5 @@ def merge_overlapping_contours(contour, contours, hierarchy, to_merge):
 
     return merged_contour, to_merge
 if __name__ == "__main__":
-    volumes = GetData("Crop.MP4", True)
+    volumes = GetData("video_2023-04-03_02-47-06.MOV", True)
 #     print(volumes)
